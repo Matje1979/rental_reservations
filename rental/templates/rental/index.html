@@ -1,0 +1,3 @@
+{% for reservation in reservation_list %}
+    <p>{{ forloop.counter }}&nbsp;&nbsp; {{ reservation.id }}&nbsp; {{ reservation.checkin }}&nbsp; {{reservation.checkin}} {{ reservation.{{ forloop.counter }} }}</p>
+{% endfor %}

@@ -1,4 +1,4 @@
 from django.urls import path
-from .views import ReservationsList
+from .views import ReservationsListView
 
-urlpatterns = [path("", ReservationsList.as_view(), name="reservation-list")]
+urlpatterns = [path("", ReservationsListView.as_view(), name="reservation-list")]

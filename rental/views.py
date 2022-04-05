@@ -3,7 +3,7 @@ from django.views.generic.list import ListView
 from django.db.models import OuterRef, Subquery
 
 
-class ReservationsList(ListView):
+class ReservationsListView(ListView):
     template_name = "rental/index.html"
     model = Reservation
     context_object_name = "reservation_list"
@@ -14,5 +14,5 @@ class ReservationsList(ListView):
         )
         qs = Reservation.objects.annotate(
             previous=Subquery(newest.values("id").order_by("-checkin")[:1])
-        )
+        ).order_by("checkin")
         return qs

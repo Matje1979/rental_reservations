@@ -17,8 +17,14 @@ class Reservation(models.Model):
     checkout = models.DateField(validators=[validate_date])
 
     def __str__(self):
-        return f"""Reservation rental num: {self.rental_id}
-        ({self.checkin.isoformat()}/{self.checkout.isoformat()})"""
+        return (
+            str(self.rental_id)
+            + "("
+            + str(self.checkin.isoformat())
+            + "/"
+            + str(self.checkout.isoformat())
+            + ")"
+        )
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -37,18 +43,18 @@ class Reservation(models.Model):
         if self.__class__.objects.filter(
             Q(
                 rental_id=self.rental_id,
-                checkin__lt=self.checkin,
-                checkout__gt=self.checkin,
+                checkin__lte=self.checkin,
+                checkout__gte=self.checkin,
             )
             | Q(
                 rental_id=self.rental_id,
-                checkin__lt=self.checkout,
-                checkout__gt=self.checkout,
+                checkin__lte=self.checkout,
+                checkout__gte=self.checkout,
             )
             | Q(
                 rental_id=self.rental_id,
-                checkin__gt=self.checkin,
-                checkout__lt=self.checkout,
+                checkin__gte=self.checkin,
+                checkout__lte=self.checkout,
             )
         ).exists():
             raise ValidationError(

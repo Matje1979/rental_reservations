@@ -4,9 +4,6 @@ from .models import Rental, Reservation
 from datetime import date
 
 
-# Create your tests here.
-
-
 class ReservationTestCase(TestCase):
     def setUp(self) -> None:
         self.rental = Rental.objects.create(name="Rental 1")
@@ -33,7 +30,7 @@ class ReservationTestCase(TestCase):
         self.assertEqual(Reservation.objects.count(), 0)
 
     def test_reservation_date_format_invalid(self):
-        with self.assertRaises(TypeError) as exc:
+        with self.assertRaises(TypeError):
             Reservation.objects.create(
                 rental_id=self.rental.id,
                 checkin=date("hey", 10, 10),

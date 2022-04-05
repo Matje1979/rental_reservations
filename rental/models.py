@@ -3,8 +3,6 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from .validators import validate_date
 
-# Create your models here.
-
 
 class Rental(models.Model):
     name = models.CharField(max_length=50)
@@ -19,7 +17,8 @@ class Reservation(models.Model):
     checkout = models.DateField(validators=[validate_date])
 
     def __str__(self):
-        return f"Reservation rental num: {self.rental_id} ({self.checkin.isoformat()}/{self.checkout.isoformat()})"
+        return f"""Reservation rental num: {self.rental_id}
+        ({self.checkin.isoformat()}/{self.checkout.isoformat()})"""
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -53,6 +52,6 @@ class Reservation(models.Model):
             )
         ).exists():
             raise ValidationError(
-                message="Reservation for this rental within this period already exists.",
+                message="Reservation for this rental within this period already exists",
                 code="unique_together",
             )

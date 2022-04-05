@@ -11,14 +11,14 @@ class ReservationTestCase(TestCase):
     def setUp(self) -> None:
         self.rental = Rental.objects.create(name="Rental 1")
         Reservation.objects.create(
-            rental_id=self.rental,
+            rental_id=self.rental.id,
             checkin=date(1999, 12, 8),
             checkout=date(1999, 12, 14),
         )
 
     def test_reservation_OK(self):
         Reservation.objects.create(
-            rental_id=self.rental,
+            rental_id=self.rental.id,
             checkin=date(1999, 10, 10),
             checkout=date(1999, 10, 12),
         )
@@ -28,7 +28,7 @@ class ReservationTestCase(TestCase):
         # Test error raised when reservation periods are overlaping.
         with self.assertRaises(ValidationError) as exc:
             Reservation.objects.create(
-                rental_id=self.rental,
+                rental_id=self.rental.id,
                 checkin=date(1999, 10, 14),
                 checkout=date(1999, 10, 12),
             )
@@ -39,7 +39,7 @@ class ReservationTestCase(TestCase):
         # Test eror raised when reservation period includes the existing.
         with self.assertRaises(ValidationError) as exc:
             Reservation.objects.create(
-                rental_id=self.rental,
+                rental_id=self.rental.id,
                 checkin=date(1999, 12, 6),
                 checkout=date(1999, 12, 16),
             )
@@ -52,7 +52,7 @@ class ReservationTestCase(TestCase):
     def test_reservation_date_format_invalid(self):
         with self.assertRaises(TypeError):
             Reservation.objects.create(
-                rental_id=self.rental,
+                rental_id=self.rental.id,
                 checkin=date("hey", 10, 10),
                 checkout=date(1999, 10, 12),
             )
@@ -67,27 +67,27 @@ class ReservationListTestCase(TestCase):
         self.rental_2 = Rental.objects.create(name="rental 2")
 
         self.reservation_1 = Reservation.objects.create(
-            rental_id=self.rental_1,
+            rental_id=self.rental_1.id,
             checkin=date(2022, 4, 13),
             checkout=date(2022, 4, 18),
         )
         self.reservation_2 = Reservation.objects.create(
-            rental_id=self.rental_1,
+            rental_id=self.rental_1.id,
             checkin=date(2022, 4, 22),
             checkout=date(2022, 4, 24),
         )
         self.reservation_3 = Reservation.objects.create(
-            rental_id=self.rental_1,
+            rental_id=self.rental_1.id,
             checkin=date(2022, 4, 8),
             checkout=date(2022, 4, 12),
         )
         self.reservation_4 = Reservation.objects.create(
-            rental_id=self.rental_2,
+            rental_id=self.rental_2.id,
             checkin=date(2022, 3, 8),
             checkout=date(2022, 4, 29),
         )
         self.reservation_5 = Reservation.objects.create(
-            rental_id=self.rental_2,
+            rental_id=self.rental_2.id,
             checkin=date(2022, 5, 8),
             checkout=date(2022, 5, 10),
         )
@@ -99,7 +99,7 @@ class ReservationListTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         reservation_list = response.render().context_data["reservation_list"]
-        print(reservation_list)
+        print(reservation_list[0].rental_name)
 
         # Test queryset items ordered by checkin time.
         self.assertEqual(reservation_list[0], self.reservation_4)

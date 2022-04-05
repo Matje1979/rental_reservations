@@ -1,5 +1,6 @@
-from django.core.exceptions import ValidationError
 import re
+from django.apps import apps
+from django.core.exceptions import ValidationError
 
 
 def validate_date(date_val):
@@ -12,3 +13,9 @@ def validate_date(date_val):
         raise ValidationError(
             f"{date_str} is not a valid date in the YYYY-MM-DD format"
         )
+
+
+def validate_id(id):
+    Rental = apps.get_model("rental", "Rental")
+    if not Rental.objects.filter(id=id).exists():
+        raise ValidationError(f"Rental with id {id} does not exist")

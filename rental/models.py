@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .validators import validate_date
+from .validators import validate_date, validate_id
 
 
 class Rental(models.Model):
@@ -12,13 +12,14 @@ class Rental(models.Model):
 
 
 class Reservation(models.Model):
-    rental_id = models.ForeignKey(Rental, on_delete=models.CASCADE)
+    rental_id = models.IntegerField(validators=[validate_id])
     checkin = models.DateField(validators=[validate_date])
     checkout = models.DateField(validators=[validate_date])
 
     def __str__(self):
         return (
-            str(self.rental_id)
+            "Rental "
+            + str(self.rental_id)
             + "("
             + str(self.checkin.isoformat())
             + "/"

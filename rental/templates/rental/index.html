@@ -26,7 +26,7 @@
             </tr>
             {% for reservation in reservation_list %}
                 <tr>
-                <td>{{reservation.rental_id.name}}</td>
+                <td>{{reservation.rental_name}}</td>
                 <td>{{ reservation.id }}</td>
                 <td>{{ reservation.checkin|date_iso }}</td>
                 <td>{{ reservation.checkout|date_iso }}</td>

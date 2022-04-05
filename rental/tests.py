@@ -99,7 +99,6 @@ class ReservationListTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         reservation_list = response.render().context_data["reservation_list"]
-        print(reservation_list)
 
         # Test queryset items ordered by checkin time.
         self.assertEqual(reservation_list[0], self.reservation_4)

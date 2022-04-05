@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .validators import validate_date, validate_id
+from .validators import validate_date
 
 # Create your models here.
 
@@ -14,7 +14,7 @@ class Rental(models.Model):
 
 
 class Reservation(models.Model):
-    rental_id = models.IntegerField(validators=[validate_id])
+    rental_id = models.ForeignKey(Rental, on_delete=models.CASCADE)
     checkin = models.DateField(validators=[validate_date])
     checkout = models.DateField(validators=[validate_date])
 
@@ -45,6 +45,11 @@ class Reservation(models.Model):
                 rental_id=self.rental_id,
                 checkin__lt=self.checkout,
                 checkout__gt=self.checkout,
+            )
+            | Q(
+                rental_id=self.rental_id,
+                checkin__gt=self.checkin,
+                checkout__lt=self.checkout,
             )
         ).exists():
             raise ValidationError(

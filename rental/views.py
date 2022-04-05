@@ -1,7 +1,6 @@
-from re import template
-from django.shortcuts import render
-from .models import Rental, Reservation
+from .models import Reservation
 from django.views.generic.list import ListView
+from django.db.models import OuterRef, Subquery
 
 
 class ReservationsList(ListView):
@@ -10,10 +9,8 @@ class ReservationsList(ListView):
     context_object_name = "reservation_list"
     
     def get_queryset(self, *args, **kwargs):
-        # qs = Reservation.objects.all().annotate(
-        #     previous = Subquery(
-                
-        #     )
-        # )
-        # return qs
-        pass
+        newest = Reservation.objects.filter(rental_id=OuterRef('rental_id'), checkout__lt=OuterRef('checkin'))
+        qs = Reservation.objects.annotate(
+            previous=Subquery(newest.values("id").order_by("-checkin")[:1])
+            )
+        return qs   
